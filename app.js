@@ -2,7 +2,7 @@ const menu = [
   {
     id: 1,
     title: 'buttermilk pancakes',
-    category: 'Breckfast',
+    category: 'breakfast',
     price: 15.99,
     img: './images/item-1.jpeg',
     desc: `I'm baby woke mlkshk wolf bitters live-edge blue bottle, hammock freegan copper mug whatever cold-pressed `,
@@ -71,32 +71,23 @@ const menu = [
     img: './images/item-9.jpeg',
     desc: `skateboard fam synth authentic semiotics. Live-edge lyft af, edison bulb yuccie crucifix microdosing.`,
   },
+  {
+    id: 10,
+    title: 'steak dinner',
+    category: 'dinner',
+    price: 20.99,
+    img: './images/item-10.jpeg',
+    desc: `skateboard fam synth authentic semiotics. Live-edge lyft af, edison bulb yuccie crucifix microdosing.`,
+  },
 ];
 
 let sectionCenter = document.querySelector('.section-center');
-const btns = document.querySelectorAll('.filter-btn');
+const btnContainer = document.querySelector('.btn-container');
 
 // display all items
 window.addEventListener('DOMContentLoaded', function () {
   displayMenu(menu);
-});
-
-// filter menu
-btns.forEach(function (btn) {
-  btn.addEventListener('click', function (e) {
-    let category = e.currentTarget.dataset.id;
-    let menuCategory = menu.filter(function (item) {
-      if (item.category === category) {
-        return item;
-      }
-    });
-    console.log(menuCategory);
-    if (menu.category === 'all') {
-      displayMenu(menu);
-    } else {
-      displayMenu(menuCategory);
-    }
-  });
+  displayMenuButtons();
 });
 
 // display menu function
@@ -124,4 +115,44 @@ function displayMenu(menuList) {
   });
   displayMenu = displayMenu.join('');
   sectionCenter.innerHTML = displayMenu;
+}
+
+// display menu buttons
+function displayMenuButtons() {
+  const categories = menu.reduce(
+    function (values, item) {
+      if (!values.includes(item.category)) {
+        values.push(item.category);
+      }
+      return values;
+    },
+    ['all']
+  );
+
+  const categoriesBtn = categories
+    .map(function (item) {
+      return `<button class="btn filter-btn" type="button" data-id=${item}>
+      ${item}
+      </button>`;
+    })
+    .join('');
+  btnContainer.innerHTML = categoriesBtn;
+  const btns = document.querySelectorAll('.filter-btn');
+
+  // filter menu
+  btns.forEach(function (btn) {
+    btn.addEventListener('click', function (e) {
+      let category = e.currentTarget.dataset.id;
+      let menuCategory = menu.filter(function (item) {
+        if (item.category === category) {
+          return item;
+        }
+      });
+      if (category === 'all') {
+        displayMenu(menu);
+      } else {
+        displayMenu(menuCategory);
+      }
+    });
+  });
 }
